@@ -1,8 +1,8 @@
 // Background script for the Area Screenshot Extension
 
 // Import environment variables and configuration
-importScripts('env.js');
-importScripts('config.js');
+importScripts("env.js");
+importScripts("config.js");
 
 // Use configuration from config.js
 const GEMINI_API_URL = CONFIG.GEMINI_API_URL;
@@ -116,15 +116,13 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   }
 });
 
-
-
 // Function to extract text from image using Gemini API
 async function extractTextFromImage(imageDataUrl) {
   // Check if API key is configured
   if (!CONFIG.isValidApiKey()) {
-    const errorMsg = CONFIG.isEnvLoaded() 
-      ? 'Gemini API key not properly configured in env.js'
-      : 'Gemini API key not configured. Please set your API key in env.js';
+    const errorMsg = CONFIG.isEnvLoaded()
+      ? "Gemini API key not properly configured in env.js"
+      : "Gemini API key not configured. Please set your API key in env.js";
     throw new Error(errorMsg);
   }
 
@@ -185,22 +183,29 @@ async function extractTextFromImage(imageDataUrl) {
       }
     } catch (error) {
       lastError = error;
-      console.error(`Gemini API request failed (attempt ${attempt}/${MAX_RETRIES}):`, error);
-      
+      console.error(
+        `Gemini API request failed (attempt ${attempt}/${MAX_RETRIES}):`,
+        error
+      );
+
       // Don't retry on certain errors
-      if (error.name === 'AbortError') {
-        throw new Error('Request timeout - please try again');
+      if (error.name === "AbortError") {
+        throw new Error("Request timeout - please try again");
       }
-      if (error.message.includes('API key')) {
+      if (error.message.includes("API key")) {
         throw error; // Don't retry API key errors
       }
-      
+
       // Wait before retrying (exponential backoff)
       if (attempt < MAX_RETRIES) {
-        await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt) * 1000));
+        await new Promise((resolve) =>
+          setTimeout(resolve, Math.pow(2, attempt) * 1000)
+        );
       }
     }
   }
-  
-  throw lastError || new Error('Failed to extract text after multiple attempts');
+
+  throw (
+    lastError || new Error("Failed to extract text after multiple attempts")
+  );
 }

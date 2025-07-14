@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI SnipText - Animation Test</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 20px;
+        font-family: "Fira Code", "SF Mono", Monaco, "Cascadia Code", monospace;
+        background: #1e1e1e;
+        color: #e0e0e0;
+        min-height: 100vh;
+      }
+
+      .demo-container {
+        text-align: center;
+        padding: 40px;
+      }
+
+      .demo-button {
+        background: #667eea;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        padding: 12px 24px;
+        font-size: 14px;
+        cursor: pointer;
+        margin: 10px;
+        font-family: inherit;
+        transition: background-color 0.2s;
+      }
+
+      .demo-button:hover {
+        background: #5a6fd8;
+      }
+
+      /* Loading Spinner */
+      .loading-spinner {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        color: white;
+        box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+        animation: spinnerRotate 1s linear infinite,
+          spinnerPulse 2s ease-in-out infinite;
+        z-index: 10000;
+      }
+
+      @keyframes spinnerRotate {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      @keyframes spinnerPulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.1);
+        }
+      }
+
+      /* Text Result Container */
+      .text-result-container {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 450px;
+        max-height: 400px;
+        background: #1e1e1e;
+        border: 1px solid #333;
+        border-radius: 8px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        z-index: 10001;
+        font-family: "Fira Code", "SF Mono", Monaco, "Cascadia Code", monospace;
+        transform-origin: bottom right;
+        overflow: hidden;
+        display: none;
+      }
+
+      .text-result-container.show {
+        display: block;
+        animation: growFromSpinner 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+
+      .text-result-container.hide {
+        animation: shrinkToSpinner 0.3s ease-in;
+      }
+
+      @keyframes growFromSpinner {
+        from {
+          transform: scale(0) translate(50px, 50px);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1) translate(0, 0);
+          opacity: 1;
+        }
+      }
+
+      @keyframes shrinkToSpinner {
+        from {
+          transform: scale(1) translate(0, 0);
+          opacity: 1;
+        }
+        to {
+          transform: scale(0) translate(50px, 50px);
+          opacity: 0;
+        }
+      }
+
+      .close-button {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: none;
+        border: none;
+        color: #888;
+        font-size: 18px;
+        cursor: pointer;
+        padding: 4px;
+        width: 24px;
+        height: 24px;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+      }
+
+      .close-button:hover {
+        background: #444;
+        color: #fff;
+      }
+
+      .header {
+        padding: 12px 16px;
+        background: #2d2d2d;
+        color: #e0e0e0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid #333;
+      }
+
+      .header-left {
+        display: flex;
+        align-items: center;
+      }
+
+      .icon {
+        font-size: 16px;
+        margin-right: 8px;
+      }
+
+      .title {
+        font-size: 13px;
+        font-weight: 500;
+        color: #e0e0e0;
+      }
+
+      .code-container {
+        position: relative;
+        background: #1e1e1e;
+        border-bottom: 1px solid #333;
+      }
+
+      .text-preview {
+        padding: 16px 16px 50px 16px;
+        margin: 0;
+        max-height: 300px;
+        overflow-y: auto;
+        font-size: 12px;
+        font-family: "Fira Code", "SF Mono", Monaco, "Cascadia Code", monospace;
+        line-height: 1.5;
+        color: #e0e0e0;
+        background: #1e1e1e;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        border: none;
+      }
+
+      .copy-button {
+        position: absolute;
+        bottom: 8px;
+        right: 8px;
+        padding: 8px;
+        background: #333;
+        color: #e0e0e0;
+        border: 1px solid #555;
+        border-radius: 4px;
+        font-size: 12px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .copy-button:hover {
+        background: #444;
+        border-color: #666;
+      }
+
+      .copy-button.copied {
+        background: #28a745;
+        border-color: #28a745;
+      }
+
+      .copy-button.error {
+        background: #dc3545;
+        border-color: #dc3545;
+      }
+
+      .section-title {
+        color: #fff;
+        font-size: 18px;
+        margin: 20px 0 10px 0;
+        font-weight: 600;
+      }
+
+      .info {
+        background: #2d2d2d;
+        border: 1px solid #444;
+        border-radius: 6px;
+        padding: 16px;
+        margin: 20px 0;
+        color: #ccc;
+        font-size: 14px;
+        line-height: 1.5;
+      }
+
+      .info h3 {
+        color: #fff;
+        margin-top: 0;
+        margin-bottom: 10px;
+      }
+
+      .info ul {
+        margin: 10px 0;
+        padding-left: 20px;
+      }
+
+      .info li {
+        margin: 5px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="demo-container">
+      <h1 style="color: #fff; margin-bottom: 30px">
+        AI SnipText - Animation Demo
+      </h1>
+
+      <div class="info">
+        <h3>🎯 Animation Updates</h3>
+        <ul>
+          <li>
+            <strong>New Animation:</strong> Text container now grows from the
+            loading spinner position
+          </li>
+          <li>
+            <strong>Auto-hide Removed:</strong> Container stays visible until
+            manually closed
+          </li>
+          <li>
+            <strong>Fixed Errors:</strong> Resolved duplicate ENV and CONFIG
+            variable declarations
+          </li>
+          <li>
+            <strong>Smooth Transitions:</strong> Enhanced cubic-bezier easing
+            for natural feel
+          </li>
+        </ul>
+      </div>
+
+      <div class="section-title">Demo Controls</div>
+      <button class="demo-button" onclick="showSpinner()">
+        Show Loading Spinner
+      </button>
+      <button class="demo-button" onclick="showResult()">
+        Show Text Result (Grows from Spinner)
+      </button>
+      <button class="demo-button" onclick="hideResult()">
+        Hide Text Result
+      </button>
+      <button class="demo-button" onclick="resetDemo()">Reset Demo</button>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div class="loading-spinner" id="spinner" style="display: none">🤖</div>
+
+    <!-- Text Result Container -->
+    <div class="text-result-container" id="resultContainer">
+      <button class="close-button" onclick="hideResult()">×</button>
+      <div class="header">
+        <div class="header-left">
+          <div class="icon">🤖</div>
+          <div class="title">AI Extracted Text</div>
+        </div>
+      </div>
+      <div class="code-container">
+        <pre class="text-preview">
+function calculateSum(a, b) {
+  return a + b;
+}
+
+const result = calculateSum(5, 3);
+console.log('Result:', result);
+
+// This is a sample code block
+// demonstrating the new animation
+for (let i = 0; i < 10; i++) {
+  console.log(`Iteration: ${i}`);
+}
+
+// Animation now grows from spinner position
+// No auto-hide - stays until manually closed
+// Fixed duplicate variable declarations</pre
+        >
+        <button class="copy-button" onclick="copyText()">📋</button>
+      </div>
+    </div>
+
+    <script>
+      let spinnerVisible = false;
+      let resultVisible = false;
+
+      function showSpinner() {
+        const spinner = document.getElementById("spinner");
+        spinner.style.display = "flex";
+        spinnerVisible = true;
+
+        // Auto-hide spinner after 2 seconds to simulate loading
+        setTimeout(() => {
+          if (spinnerVisible && !resultVisible) {
+            hideSpinner();
+          }
+        }, 2000);
+      }
+
+      function hideSpinner() {
+        const spinner = document.getElementById("spinner");
+        spinner.style.display = "none";
+        spinnerVisible = false;
+      }
+
+      function showResult() {
+        if (!spinnerVisible) {
+          showSpinner();
+          // Wait a moment to show the spinner first
+          setTimeout(() => showResultContainer(), 500);
+        } else {
+          showResultContainer();
+        }
+      }
+
+      function showResultContainer() {
+        const container = document.getElementById("resultContainer");
+        hideSpinner();
+        container.classList.remove("hide");
+        container.classList.add("show");
+        resultVisible = true;
+      }
+
+      function hideResult() {
+        const container = document.getElementById("resultContainer");
+        container.classList.remove("show");
+        container.classList.add("hide");
+        resultVisible = false;
+
+        // Remove the container from view after animation
+        setTimeout(() => {
+          container.classList.remove("hide");
+        }, 300);
+      }
+
+      function resetDemo() {
+        hideSpinner();
+        hideResult();
+      }
+
+      function copyText() {
+        const button = document.querySelector(".copy-button");
+        const text = document.querySelector(".text-preview").textContent;
+
+        navigator.clipboard
+          .writeText(text)
+          .then(() => {
+            button.innerHTML = "✅";
+            button.classList.add("copied");
+            setTimeout(() => {
+              button.innerHTML = "📋";
+              button.classList.remove("copied");
+            }, 2000);
+          })
+          .catch(() => {
+            button.innerHTML = "❌";
+            button.classList.add("error");
+            setTimeout(() => {
+              button.innerHTML = "📋";
+              button.classList.remove("error");
+            }, 2000);
+          });
+      }
+
+      // Show initial demo
+      setTimeout(() => {
+        showSpinner();
+      }, 1000);
+    </script>
+  </body>
+</html>

@@ -1,119 +1,120 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AI SnipText Extension Test Page</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
-        h1 {
-            color: #333;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .test-section {
-            margin: 20px 0;
-            padding: 20px;
-            border: 2px dashed #ddd;
-            border-radius: 8px;
-        }
-        .text-sample {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 5px;
-            margin: 10px 0;
-        }
-        .code-sample {
-            background: #2d3748;
-            color: #e2e8f0;
-            padding: 15px;
-            border-radius: 5px;
-            font-family: 'Courier New', monospace;
-            margin: 10px 0;
-        }
-        .instructions {
-            background: #e3f2fd;
-            padding: 15px;
-            border-radius: 5px;
-            border-left: 4px solid #2196f3;
-            margin: 20px 0;
-        }
+      body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        margin: 0;
+        padding: 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+      }
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      }
+      h1 {
+        color: #333;
+        text-align: center;
+        margin-bottom: 30px;
+      }
+      .test-section {
+        margin: 20px 0;
+        padding: 20px;
+        border: 2px dashed #ddd;
+        border-radius: 8px;
+      }
+      .text-sample {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 5px;
+        margin: 10px 0;
+      }
+      .code-sample {
+        background: #2d3748;
+        color: #e2e8f0;
+        padding: 15px;
+        border-radius: 5px;
+        font-family: "Courier New", monospace;
+        margin: 10px 0;
+      }
+      .instructions {
+        background: #e3f2fd;
+        padding: 15px;
+        border-radius: 5px;
+        border-left: 4px solid #2196f3;
+        margin: 20px 0;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <h1>🤖 AI SnipText Extension Test Page</h1>
-        
-        <div class="instructions">
-            <h3>📋 How to Test:</h3>
-            <ol>
-                <li>Click the AI SnipText extension icon in your browser toolbar</li>
-                <li>The area selection will start immediately</li>
-                <li>Select any text area below by dragging</li>
-                <li>The AI will automatically process and extract the text</li>
-                <li>View the result in the bottom-right corner</li>
-            </ol>
-        </div>
+      <h1>🤖 AI SnipText Extension Test Page</h1>
 
-        <div class="test-section">
-            <h2>📝 Sample Text for Testing</h2>
-            <div class="text-sample">
-                <h3>Lorem Ipsum Text</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-            </div>
-        </div>
+      <div class="instructions">
+        <h3>📋 How to Test:</h3>
+        <ol>
+          <li>Click the AI SnipText extension icon in your browser toolbar</li>
+          <li>The area selection will start immediately</li>
+          <li>Select any text area below by dragging</li>
+          <li>The AI will automatically process and extract the text</li>
+          <li>View the result in the bottom-right corner</li>
+        </ol>
+      </div>
 
-        <div class="test-section">
-            <h2>💻 Code Sample</h2>
-            <div class="code-sample">
-function extractText(image) {
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    
-    // Process image with AI
-    return processWithGemini(image);
-}
-            </div>
+      <div class="test-section">
+        <h2>📝 Sample Text for Testing</h2>
+        <div class="text-sample">
+          <h3>Lorem Ipsum Text</h3>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
+            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+            aliquip ex ea commodo consequat.
+          </p>
         </div>
+      </div>
 
-        <div class="test-section">
-            <h2>📊 Mixed Content</h2>
-            <div class="text-sample">
-                <h3>Technical Specifications</h3>
-                <ul>
-                    <li><strong>Model:</strong> Gemini 2.0 Flash</li>
-                    <li><strong>Processing:</strong> Real-time text extraction</li>
-                    <li><strong>Output:</strong> Clean, formatted text</li>
-                    <li><strong>Features:</strong> Instant area selection</li>
-                </ul>
-            </div>
+      <div class="test-section">
+        <h2>💻 Code Sample</h2>
+        <div class="code-sample">
+          function extractText(image) { const canvas =
+          document.createElement('canvas'); const ctx = canvas.getContext('2d');
+          // Process image with AI return processWithGemini(image); }
         </div>
+      </div>
 
-        <div class="test-section">
-            <h2>🎯 Special Characters & Numbers</h2>
-            <div class="text-sample">
-                <p>Email: test@example.com</p>
-                <p>Phone: +1 (555) 123-4567</p>
-                <p>Price: $29.99</p>
-                <p>Date: 2024-01-15</p>
-                <p>Special: @#$%^&*()_+-=[]{}|;':",./<>?</p>
-            </div>
+      <div class="test-section">
+        <h2>📊 Mixed Content</h2>
+        <div class="text-sample">
+          <h3>Technical Specifications</h3>
+          <ul>
+            <li><strong>Model:</strong> Gemini 2.0 Flash</li>
+            <li><strong>Processing:</strong> Real-time text extraction</li>
+            <li><strong>Output:</strong> Clean, formatted text</li>
+            <li><strong>Features:</strong> Instant area selection</li>
+          </ul>
         </div>
+      </div>
+
+      <div class="test-section">
+        <h2>🎯 Special Characters & Numbers</h2>
+        <div class="text-sample">
+          <p>Email: test@example.com</p>
+          <p>Phone: +1 (555) 123-4567</p>
+          <p>Price: $29.99</p>
+          <p>Date: 2024-01-15</p>
+          <p>Special: @#$%^&*()_+-=[]{}|;':",./<>?</p>
+        </div>
+      </div>
     </div>
-</body>
+  </body>
 </html>

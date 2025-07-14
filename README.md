@@ -17,11 +17,13 @@ A Chrome extension that allows users to select any area on a webpage, capture it
 ## Setup
 
 1. **Get a Gemini API Key**:
+
    - Visit [Google AI Studio](https://makersuite.google.com/app/apikey)
    - Create a new API key
    - Copy the API key
 
 2. **Configure API Key**:
+
    - Open `env.js` in the extension folder
    - Replace `YOUR_GEMINI_API_KEY_HERE` with your actual API key
    - Save the file
@@ -35,15 +37,18 @@ A Chrome extension that allows users to select any area on a webpage, capture it
 ## How to Use
 
 1. **Instant Selection**:
+
    - Click the AI SnipText extension icon
    - Area selection starts immediately - no additional clicks needed!
 
 2. **Select Area**:
+
    - Your cursor will change to a crosshair
    - Click and drag to select the area containing text
    - The selection will be highlighted with a blue border
 
 3. **Automatic AI Processing**:
+
    - After selecting an area, AI processing begins automatically
    - A professional loading animation will appear
    - The Gemini 2.0 Flash model extracts text from the selected area

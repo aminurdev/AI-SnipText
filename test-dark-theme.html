@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI SnipText - Dark Theme Test</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 20px;
+        font-family: "Fira Code", "SF Mono", Monaco, "Cascadia Code", monospace;
+        background: #1e1e1e;
+        color: #e0e0e0;
+      }
+
+      .popup-preview {
+        width: 280px;
+        height: 120px;
+        margin: 20px;
+        padding: 0;
+        font-family: "Fira Code", "SF Mono", Monaco, "Cascadia Code", monospace;
+        background: #1e1e1e;
+        color: #e0e0e0;
+        border: 1px solid #333;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+      }
+
+      .container {
+        text-align: center;
+        padding: 20px;
+        background: #2d2d2d;
+        border-radius: 6px;
+        border: 1px solid #444;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      }
+
+      .title {
+        font-size: 15px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        color: #fff;
+      }
+
+      .subtitle {
+        font-size: 10px;
+        opacity: 0.7;
+        margin-bottom: 15px;
+        color: #888;
+      }
+
+      .status {
+        font-size: 11px;
+        opacity: 0.8;
+        animation: pulse 2s infinite;
+        color: #ccc;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 0.6;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+
+      .loading {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border: 2px solid #444;
+        border-radius: 50%;
+        border-top-color: #667eea;
+        animation: spin 1s ease-in-out infinite;
+        margin-right: 8px;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Text Result Container Preview */
+      .text-result-container {
+        position: relative;
+        width: 450px;
+        max-width: 90vw;
+        max-height: 70vh;
+        background: #1e1e1e;
+        border: 1px solid #333;
+        border-radius: 8px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        font-family: "Fira Code", "SF Mono", Monaco, "Cascadia Code", monospace;
+        margin: 20px;
+        overflow: hidden;
+      }
+
+      .close-button {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        background: #333;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        width: 24px;
+        height: 24px;
+        cursor: pointer;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10;
+      }
+
+      .close-button:hover {
+        background: #555;
+      }
+
+      .text-preview {
+        background: #2d2d2d;
+        border: 1px solid #444;
+        border-radius: 6px;
+        padding: 16px;
+        margin: 16px;
+        margin-top: 40px;
+        font-family: "Fira Code", "SF Mono", Monaco, "Cascadia Code", monospace;
+        font-size: 13px;
+        line-height: 1.5;
+        color: #e0e0e0;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        max-height: 300px;
+        overflow-y: auto;
+        position: relative;
+      }
+
+      .copy-button {
+        position: absolute;
+        bottom: 8px;
+        right: 8px;
+        background: #667eea;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 6px 12px;
+        cursor: pointer;
+        font-size: 11px;
+        font-family: "Fira Code", "SF Mono", Monaco, "Cascadia Code", monospace;
+        transition: background-color 0.2s;
+      }
+
+      .copy-button:hover {
+        background: #5a6fd8;
+      }
+
+      .copy-button.copied {
+        background: #28a745;
+      }
+
+      .section-title {
+        color: #fff;
+        font-size: 18px;
+        margin: 20px 0 10px 0;
+        font-weight: 600;
+      }
+
+      .loading-spinner {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        color: white;
+        box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+        animation: spinnerRotate 1s linear infinite,
+          spinnerPulse 2s ease-in-out infinite;
+        z-index: 10000;
+      }
+
+      @keyframes spinnerRotate {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      @keyframes spinnerPulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.1);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1 style="color: #fff; margin-bottom: 30px">
+      AI SnipText - Dark Theme Preview
+    </h1>
+
+    <div class="section-title">Popup UI</div>
+    <div class="popup-preview">
+      <div class="container">
+        <div class="title">🤖 AI SnipText</div>
+        <div class="subtitle">Powered by Gemini 2.0 Flash</div>
+        <div class="status">
+          <span class="loading"></span>
+          Starting area selection...
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title">Text Result Container</div>
+    <div class="text-result-container">
+      <button class="close-button">×</button>
+      <div class="text-preview">
+        function calculateSum(a, b) { return a + b; } const result =
+        calculateSum(5, 3); console.log('Result:', result); // This is a sample
+        code block // demonstrating the new dark theme for (let i = 0; i < 10;
+        i++) { console.log(`Iteration: ${i}`); }
+        <button class="copy-button">Copy</button>
+      </div>
+    </div>
+
+    <div class="section-title">Loading Spinner</div>
+    <div class="loading-spinner">🤖</div>
+
+    <script>
+      // Demo functionality
+      document
+        .querySelector(".copy-button")
+        .addEventListener("click", function () {
+          this.textContent = "Copied!";
+          this.classList.add("copied");
+          setTimeout(() => {
+            this.textContent = "Copy";
+            this.classList.remove("copied");
+          }, 2000);
+        });
+
+      document
+        .querySelector(".close-button")
+        .addEventListener("click", function () {
+          alert("Close button clicked!");
+        });
+    </script>
+  </body>
+</html>

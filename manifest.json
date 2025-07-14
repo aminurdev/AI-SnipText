@@ -1,14 +1,10 @@
 {
   "manifest_version": 3,
-  "name": "Area Screenshot Extension",
+  "name": "AI SnipText",
   "version": "1.0",
-  "description": "Select an area on any webpage and convert it to an image",
-  "permissions": [
-    "activeTab",
-    "scripting",
-    "downloads",
-    "tabs"
-  ],
+  "description": "Chrome extension to select any area of a webpage, extract the content using Gemini AI, and return readable text with smart processing.",
+  "permissions": ["activeTab", "scripting", "downloads", "tabs", "storage"],
+  "host_permissions": ["https://generativelanguage.googleapis.com/*"],
   "action": {
     "default_popup": "popup.html",
     "default_title": "Take Area Screenshot"

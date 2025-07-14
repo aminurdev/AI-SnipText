@@ -1,0 +1,28 @@
+# Environment files containing sensitive information
+env.js
+
+# Node modules (if using npm)
+node_modules/
+
+# IDE files
+.vscode/
+.idea/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# Chrome extension development files
+*.crx
+*.pem
+
+# Backup files
+*.bak
+*.backup

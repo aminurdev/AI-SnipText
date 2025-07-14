@@ -1,123 +1,84 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI SnipText</title>
   <style>
     body {
-      width: 300px;
-      padding: 15px;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    }
-    
-    .btn {
-      width: 100%;
-      padding: 10px;
-      background-color: #007bff;
+      width: 280px;
+      height: 120px;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 14px;
-      margin-bottom: 10px;
-      font-weight: 500;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    
-    .btn:hover {
-      background-color: #0056b3;
+
+    .container {
+      text-align: center;
+      padding: 20px;
     }
-    
-    .btn:disabled {
-      background-color: #ccc;
-      cursor: not-allowed;
-    }
-    
+
     .title {
-      text-align: center;
-      margin-bottom: 15px;
-      font-weight: 600;
-      color: #333;
-      font-size: 18px;
-    }
-    
-    .instruction {
-      font-size: 12px;
-      color: #666;
-      text-align: center;
-      margin-top: 10px;
-    }
-    
-    .api-section {
-      margin-bottom: 15px;
-      padding: 12px;
-      background: #f8f9fa;
-      border-radius: 6px;
-      border: 1px solid #e9ecef;
-    }
-    
-    .api-label {
-      font-size: 12px;
-      font-weight: 500;
-      color: #495057;
-      margin-bottom: 5px;
-    }
-    
-    .api-input {
-      width: 100%;
-      padding: 8px;
-      border: 1px solid #ced4da;
-      border-radius: 4px;
-      font-size: 12px;
-      box-sizing: border-box;
+      font-size: 16px;
+      font-weight: bold;
       margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
-    
-    .api-status {
+
+    .subtitle {
       font-size: 11px;
-      padding: 4px 8px;
-      border-radius: 4px;
-      text-align: center;
+      opacity: 0.9;
+      margin-bottom: 15px;
     }
-    
-    .status-success {
-      background: #d4edda;
-      color: #155724;
-      border: 1px solid #c3e6cb;
+
+    .status {
+      font-size: 12px;
+      opacity: 0.8;
+      animation: pulse 2s infinite;
     }
-    
-    .status-error {
-      background: #f8d7da;
-      color: #721c24;
-      border: 1px solid #f5c6cb;
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; }
     }
-    
-    .api-help {
-      font-size: 10px;
-      color: #6c757d;
-      margin-top: 5px;
+
+    .loading {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s ease-in-out infinite;
+      margin-right: 8px;
     }
-    
-    .api-help a {
-      color: #007bff;
-      text-decoration: none;
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
     }
   </style>
 </head>
 <body>
-  <div class="title">AI SnipText</div>
-  
-  <div class="api-section">
-    <div class="api-label">Gemini API Key</div>
-    <input type="password" id="apiKeyInput" class="api-input" placeholder="Enter your Gemini API key">
-    <button id="saveApiKeyBtn" class="btn" style="font-size: 12px; padding: 6px;">Save API Key</button>
-    <div id="apiStatus" class="api-status" style="display: none;"></div>
-    <div class="api-help">
-      Get your API key from <a href="https://makersuite.google.com/app/apikey" target="_blank">Google AI Studio</a>
+  <div class="container">
+    <div class="title">
+      🤖 AI SnipText
+    </div>
+    <div class="subtitle">Powered by Gemini 2.0 Flash</div>
+    <div class="status">
+      <span class="loading"></span>
+      Starting area selection...
     </div>
   </div>
-  
-  <button id="captureBtn" class="btn">Select Area & Extract Text</button>
-  <div class="instruction">Click to start selecting an area and extract text using Gemini 2.0 Flash</div>
-  
+
   <script src="popup.js"></script>
 </body>
 </html>

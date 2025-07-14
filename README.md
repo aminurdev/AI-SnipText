@@ -14,37 +14,45 @@ A Chrome extension that allows users to select any area on a webpage, capture it
 - **Easy Controls**: Simple capture and cancel buttons
 - **Keyboard Support**: Press Escape to cancel selection
 
-## Installation
+## Setup
 
 1. **Get a Gemini API Key**:
    - Visit [Google AI Studio](https://makersuite.google.com/app/apikey)
-   - Sign in with your Google account
    - Create a new API key
-   - Copy the API key for later use
+   - Copy the API key
 
-2. **Install the Extension**:
-   - Open Chrome and navigate to `chrome://extensions/`
-   - Enable "Developer mode" by toggling the switch in the top right corner
-   - Click "Load unpacked" button
-   - Select the folder containing this extension
-   - The extension should now appear in your extensions list and toolbar
+2. **Configure API Key**:
+   - Open `env.js` in the extension folder
+   - Replace `YOUR_GEMINI_API_KEY_HERE` with your actual API key
+   - Save the file
+   - Optionally customize other settings in `config.js` like auto-hide delay, timeouts, etc.
 
-3. **Configure API Key**:
-   - Click the extension icon in the Chrome toolbar
-   - Paste your Gemini API key in the "Gemini API Key" field
-   - Click "Save API Key"
-   - The extension is now ready to use
+3. **Install the Extension**:
+   - Open Chrome and go to `chrome://extensions/`
+   - Enable "Developer mode" in the top right
+   - Click "Load unpacked" and select this extension folder
 
 ## How to Use
 
-1. **Start Selection**: Click the extension icon in the Chrome toolbar and click "Select Area & Extract Text"
-2. **Select Area**: An overlay will appear on the current webpage. Click and drag to select the desired area
-3. **Capture & Extract**: Once you've selected an area, click the "Capture" button
-4. **AI Processing**: Watch the professional loading animation while Gemini 2.0 Flash processes your image
-5. **View Results**: A modern modal will appear showing:
-   - Extracted text from the image
-   - One-click copy to clipboard functionality
-6. **Cancel**: Click "Cancel" or press Escape to exit selection mode
+1. **Instant Selection**:
+   - Click the AI SnipText extension icon
+   - Area selection starts immediately - no additional clicks needed!
+
+2. **Select Area**:
+   - Your cursor will change to a crosshair
+   - Click and drag to select the area containing text
+   - The selection will be highlighted with a blue border
+
+3. **Automatic AI Processing**:
+   - After selecting an area, AI processing begins automatically
+   - A professional loading animation will appear
+   - The Gemini 2.0 Flash model extracts text from the selected area
+
+4. **View Results**:
+   - Extracted text appears in a simple rectangular container in the bottom-right corner
+   - Click the copy button to copy text to clipboard
+   - The result container auto-hides after 10 seconds
+   - Press ESC anytime to cancel the selection
 
 ## Files Structure
 

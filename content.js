@@ -161,14 +161,21 @@ if (typeof window.AreaSelector === "undefined") {
         scrollY: window.scrollY,
       };
 
-      // Hide overlay temporarily
+      // Hide overlay temporarily - use both display and visibility for complete hiding
       this.overlay.style.display = "none";
+      this.overlay.style.visibility = "hidden";
       this.selectionBox.style.display = "none";
+      this.selectionBox.style.visibility = "hidden";
       this.selectionInfo.style.display = "none";
+      this.selectionInfo.style.visibility = "hidden";
       this.selectionControls.style.display = "none";
+      this.selectionControls.style.visibility = "hidden";
 
       // Show loading animation
       this.showLoadingAnimation();
+
+      // Wait a brief moment to ensure overlay is completely hidden before capture
+      await new Promise(resolve => setTimeout(resolve, 50));
 
       try {
         // Send message to background script to capture screenshot

@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVG to PNG Converter</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        .upload-area {
+            border: 3px dashed #667eea;
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 20px;
+            background: #f8f9ff;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .upload-area:hover {
+            border-color: #764ba2;
+            background: #f0f2ff;
+        }
+
+        .upload-area.dragover {
+            border-color: #28a745;
+            background: #f0fff4;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .upload-text {
+            font-size: 1.2em;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .size-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .size-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px;
+            background: #f8f9ff;
+            border-radius: 6px;
+            border: 2px solid #e0e6ff;
+        }
+
+        .size-option input[type="checkbox"] {
+            transform: scale(1.2);
+        }
+
+        .preview-area {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9ff;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .preview-svg {
+            max-width: 200px;
+            max-height: 200px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: white;
+            padding: 10px;
+            margin: 10px auto;
+            display: block;
+        }
+
+        .convert-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            width: 100%;
+            margin: 20px 0;
+            transition: all 0.3s ease;
+        }
+
+        .convert-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .convert-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .results {
+            margin-top: 20px;
+        }
+
+        .result-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            background: #f8f9ff;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            border: 1px solid #e0e6ff;
+        }
+
+        .result-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .result-preview {
+            width: 40px;
+            height: 40px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: white;
+            padding: 5px;
+        }
+
+        .download-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        .download-btn:hover {
+            background: #218838;
+        }
+
+        .progress {
+            width: 100%;
+            height: 6px;
+            background: #e0e6ff;
+            border-radius: 3px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .status {
+            text-align: center;
+            margin: 10px 0;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 SVG to PNG Converter</h1>
+        
+        <div class="upload-area" id="uploadArea">
+            <div class="upload-text">📁 Click to select SVG files or drag & drop them here</div>
+            <div style="color: #999; font-size: 0.9em;">Supports multiple SVG files</div>
+            <input type="file" id="fileInput" class="file-input" accept=".svg" multiple>
+        </div>
+
+        <div class="size-options">
+            <div class="size-option">
+                <input type="checkbox" id="size16" checked>
+                <label for="size16">16x16px</label>
+            </div>
+            <div class="size-option">
+                <input type="checkbox" id="size32" checked>
+                <label for="size32">32x32px</label>
+            </div>
+            <div class="size-option">
+                <input type="checkbox" id="size48" checked>
+                <label for="size48">48x48px</label>
+            </div>
+            <div class="size-option">
+                <input type="checkbox" id="size64" checked>
+                <label for="size64">64x64px</label>
+            </div>
+            <div class="size-option">
+                <input type="checkbox" id="size128" checked>
+                <label for="size128">128x128px</label>
+            </div>
+            <div class="size-option">
+                <input type="checkbox" id="size256" checked>
+                <label for="size256">256x256px</label>
+            </div>
+            <div class="size-option">
+                <input type="checkbox" id="size512">
+                <label for="size512">512x512px</label>
+            </div>
+            <div class="size-option">
+                <input type="checkbox" id="size1024">
+                <label for="size1024">1024x1024px</label>
+            </div>
+        </div>
+
+        <div class="preview-area" id="previewArea">
+            <h3>Preview:</h3>
+            <div id="previewContainer"></div>
+        </div>
+
+        <button class="convert-btn" id="convertBtn" disabled>Convert to PNG</button>
+
+        <div class="progress" id="progressContainer" style="display: none;">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <div class="status" id="status"></div>
+
+        <div class="results" id="results"></div>
+    </div>
+
+    <script>
+        let selectedFiles = [];
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const previewArea = document.getElementById('previewArea');
+        const previewContainer = document.getElementById('previewContainer');
+        const convertBtn = document.getElementById('convertBtn');
+        const results = document.getElementById('results');
+        const progressContainer = document.getElementById('progressContainer');
+        const progressBar = document.getElementById('progressBar');
+        const status = document.getElementById('status');
+
+        // File upload handlers
+        uploadArea.addEventListener('click', () => fileInput.click());
+        uploadArea.addEventListener('dragover', handleDragOver);
+        uploadArea.addEventListener('dragleave', handleDragLeave);
+        uploadArea.addEventListener('drop', handleDrop);
+        fileInput.addEventListener('change', handleFileSelect);
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        }
+
+        function handleDragLeave(e) {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = Array.from(e.dataTransfer.files).filter(file => file.type === 'image/svg+xml');
+            if (files.length > 0) {
+                selectedFiles = files;
+                showPreview();
+            }
+        }
+
+        function handleFileSelect(e) {
+            selectedFiles = Array.from(e.target.files);
+            showPreview();
+        }
+
+        function showPreview() {
+            previewContainer.innerHTML = '';
+            
+            selectedFiles.forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const div = document.createElement('div');
+                    div.style.cssText = 'margin: 10px; text-align: center;';
+                    
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'preview-svg';
+                    
+                    const label = document.createElement('div');
+                    label.textContent = file.name;
+                    label.style.cssText = 'margin-top: 5px; font-size: 0.9em; color: #666;';
+                    
+                    div.appendChild(img);
+                    div.appendChild(label);
+                    previewContainer.appendChild(div);
+                };
+                reader.readAsDataURL(file);
+            });
+            
+            previewArea.style.display = 'block';
+            convertBtn.disabled = false;
+        }
+
+        // Convert function
+        convertBtn.addEventListener('click', convertFiles);
+
+        async function convertFiles() {
+            const selectedSizes = getSelectedSizes();
+            if (selectedSizes.length === 0) {
+                alert('Please select at least one size option.');
+                return;
+            }
+
+            convertBtn.disabled = true;
+            progressContainer.style.display = 'block';
+            results.innerHTML = '';
+            
+            const totalOperations = selectedFiles.length * selectedSizes.length;
+            let completedOperations = 0;
+
+            for (const file of selectedFiles) {
+                const svgContent = await readFileAsText(file);
+                const baseName = file.name.replace('.svg', '');
+                
+                for (const size of selectedSizes) {
+                    try {
+                        status.textContent = `Converting ${baseName} to ${size}x${size}px...`;
+                        const pngBlob = await convertSvgToPng(svgContent, size);
+                        const fileName = `${baseName}_${size}x${size}.png`;
+                        
+                        addResultItem(fileName, pngBlob, size);
+                        
+                        completedOperations++;
+                        const progress = (completedOperations / totalOperations) * 100;
+                        progressBar.style.width = progress + '%';
+                        
+                        // Small delay to show progress
+                        await new Promise(resolve => setTimeout(resolve, 100));
+                    } catch (error) {
+                        console.error(`Error converting ${baseName} to ${size}px:`, error);
+                    }
+                }
+            }
+            
+            status.textContent = `✅ Conversion completed! ${completedOperations} files generated.`;
+            convertBtn.disabled = false;
+            
+            // Hide progress bar after a delay
+            setTimeout(() => {
+                progressContainer.style.display = 'none';
+                progressBar.style.width = '0%';
+            }, 2000);
+        }
+
+        function getSelectedSizes() {
+            const sizes = [];
+            const checkboxes = document.querySelectorAll('.size-option input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                if (checkbox.checked) {
+                    const size = parseInt(checkbox.id.replace('size', ''));
+                    sizes.push(size);
+                }
+            });
+            return sizes;
+        }
+
+        function readFileAsText(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = e => resolve(e.target.result);
+                reader.onerror = reject;
+                reader.readAsText(file);
+            });
+        }
+
+        function convertSvgToPng(svgContent, size) {
+            return new Promise((resolve, reject) => {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = size;
+                canvas.height = size;
+                
+                const img = new Image();
+                img.onload = () => {
+                    ctx.clearRect(0, 0, size, size);
+                    ctx.drawImage(img, 0, 0, size, size);
+                    
+                    canvas.toBlob(resolve, 'image/png');
+                };
+                img.onerror = reject;
+                
+                const svgBlob = new Blob([svgContent], { type: 'image/svg+xml' });
+                const url = URL.createObjectURL(svgBlob);
+                img.src = url;
+            });
+        }
+
+        function addResultItem(fileName, blob, size) {
+            const resultItem = document.createElement('div');
+            resultItem.className = 'result-item';
+            
+            const resultInfo = document.createElement('div');
+            resultInfo.className = 'result-info';
+            
+            const preview = document.createElement('img');
+            preview.className = 'result-preview';
+            preview.src = URL.createObjectURL(blob);
+            
+            const info = document.createElement('div');
+            info.innerHTML = `
+                <div style="font-weight: 500;">${fileName}</div>
+                <div style="font-size: 0.8em; color: #666;">${size}x${size}px • ${(blob.size / 1024).toFixed(1)} KB</div>
+            `;
+            
+            const downloadBtn = document.createElement('button');
+            downloadBtn.className = 'download-btn';
+            downloadBtn.textContent = '⬇️ Download';
+            downloadBtn.onclick = () => downloadFile(fileName, blob);
+            
+            resultInfo.appendChild(preview);
+            resultInfo.appendChild(info);
+            resultItem.appendChild(resultInfo);
+            resultItem.appendChild(downloadBtn);
+            
+            results.appendChild(resultItem);
+        }
+
+        function downloadFile(fileName, blob) {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `assets/${fileName}`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // Download all button
+        function addDownloadAllButton() {
+            if (results.children.length > 1 && !document.getElementById('downloadAllBtn')) {
+                const downloadAllBtn = document.createElement('button');
+                downloadAllBtn.id = 'downloadAllBtn';
+                downloadAllBtn.className = 'convert-btn';
+                downloadAllBtn.textContent = '📦 Download All as ZIP';
+                downloadAllBtn.style.background = '#28a745';
+                downloadAllBtn.onclick = downloadAllAsZip;
+                results.insertBefore(downloadAllBtn, results.firstChild);
+            }
+        }
+
+        // Add download all button when results are added
+        const observer = new MutationObserver(() => {
+            if (results.children.length > 1) {
+                addDownloadAllButton();
+            }
+        });
+        observer.observe(results, { childList: true });
+
+        async function downloadAllAsZip() {
+            // This would require a ZIP library like JSZip
+            // For now, we'll just download files individually
+            const downloadButtons = results.querySelectorAll('.download-btn');
+            downloadButtons.forEach((btn, index) => {
+                setTimeout(() => btn.click(), index * 200);
+            });
+        }
+    </script>
+</body>
+</html>

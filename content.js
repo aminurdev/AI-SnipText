@@ -275,7 +275,7 @@ if (typeof window.AreaSelector === "undefined") {
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
       z-index: 10001;
       font-family: 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', monospace;
-      animation: growFromSpinner 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      animation: growFromSpinner 0.3s ease-out;
       transform-origin: bottom right;
       overflow: hidden;
     `;

@@ -7,7 +7,17 @@
   "host_permissions": ["https://generativelanguage.googleapis.com/*"],
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Take Area Screenshot"
+    "default_title": "AI SnipText - Extract Text from Images",
+    "default_icon": {
+      "16": "icon16.svg",
+      "48": "icon48.svg",
+      "128": "icon128.svg"
+    }
+  },
+  "icons": {
+    "16": "icon16.svg",
+    "48": "icon48.svg",
+    "128": "icon128.svg"
   },
   "content_scripts": [
     {

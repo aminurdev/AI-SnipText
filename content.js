@@ -82,6 +82,7 @@ if (typeof window.AreaSelector === "undefined") {
       this.startY = e.clientY;
       this.endX = e.clientX;
       this.endY = e.clientY;
+      this.overlay.classList.add("selecting");
       this.selectionBox.style.display = "block";
       this.selectionBox.style.left = this.startX + "px";
       this.selectionBox.style.top = this.startY + "px";
@@ -133,6 +134,7 @@ if (typeof window.AreaSelector === "undefined") {
         this.captureArea();
       } else {
         // If selection is too small, reset
+        this.overlay.classList.remove("selecting");
         this.selectionBox.style.display = "none";
         this.selectionInfo.textContent = "Click and drag to select an area";
       }

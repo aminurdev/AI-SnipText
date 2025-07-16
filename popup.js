@@ -22,11 +22,13 @@ document.addEventListener("DOMContentLoaded", async function () {
     const isCSSInjected = await chrome.scripting.executeScript({
       target: { tabId: tab.id },
       func: () => {
-        return document.querySelector('link[href*="overlay.css"]') !== null ||
-               Array.from(document.styleSheets).some(sheet => 
-                 sheet.href && sheet.href.includes('overlay.css')
-               );
-      }
+        return (
+          document.querySelector('link[href*="overlay.css"]') !== null ||
+          Array.from(document.styleSheets).some(
+            (sheet) => sheet.href && sheet.href.includes("overlay.css")
+          )
+        );
+      },
     });
 
     // Only inject CSS if it hasn't been injected yet
@@ -41,10 +43,12 @@ document.addEventListener("DOMContentLoaded", async function () {
     const isInjected = await chrome.scripting.executeScript({
       target: { tabId: tab.id },
       func: () => {
-        return typeof window.areaSelector !== "undefined" && 
-               typeof window.ENV !== "undefined" && 
-               typeof window.CONFIG !== "undefined";
-      }
+        return (
+          typeof window.areaSelector !== "undefined" &&
+          typeof window.ENV !== "undefined" &&
+          typeof window.CONFIG !== "undefined"
+        );
+      },
     });
 
     // Only inject scripts if they haven't been injected yet

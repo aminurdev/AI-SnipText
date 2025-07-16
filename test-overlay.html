@@ -1,104 +1,142 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Test Overlay Effect</title>
-    <link rel="stylesheet" href="overlay.css">
+    <link rel="stylesheet" href="overlay.css" />
     <style>
-        body {
-            margin: 0;
-            padding: 20px;
-            font-family: Arial, sans-serif;
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
-            min-height: 100vh;
-        }
-        .content {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            margin: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        .test-button {
-            background: #007cba;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin: 10px;
-        }
+      body {
+        margin: 0;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+        background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
+        min-height: 100vh;
+      }
+      .content {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        margin: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      .test-button {
+        background: #007cba;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin: 10px;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="content">
-        <h1>Test Overlay Effect</h1>
-        <p>This page tests the transparent selection overlay effect.</p>
-        <button class="test-button" onclick="startTest()">Start Selection Test</button>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+      <h1>Test Overlay Effect</h1>
+      <p>This page tests the transparent selection overlay effect.</p>
+      <button class="test-button" onclick="startTest()">
+        Start Selection Test
+      </button>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod
+        tempor incididunt ut labore et dolore magna aliqua.
+      </p>
     </div>
-    
+
     <div class="content">
-        <h2>Another Section</h2>
-        <p>This is another section to test the overlay effect on different content.</p>
-        <button class="test-button">Another Button</button>
+      <h2>Another Section</h2>
+      <p>
+        This is another section to test the overlay effect on different content.
+      </p>
+      <button class="test-button">Another Button</button>
     </div>
 
     <script>
-        function startTest() {
-            // Create overlay
-            const overlay = document.createElement('div');
-            overlay.className = 'screenshot-overlay';
-            document.body.appendChild(overlay);
-            
-            // Create selection box
-            const selectionBox = document.createElement('div');
-            selectionBox.className = 'selection-box';
-            selectionBox.style.display = 'none';
-            document.body.appendChild(selectionBox);
-            
-            let isDragging = false;
-            let startX, startY;
-            
-            overlay.addEventListener('mousedown', (e) => {
-                isDragging = true;
-                startX = e.clientX;
-                startY = e.clientY;
-                overlay.classList.add('selecting');
-                selectionBox.style.display = 'block';
-                selectionBox.style.left = startX + 'px';
-                selectionBox.style.top = startY + 'px';
-                selectionBox.style.width = '0px';
-                selectionBox.style.height = '0px';
-            });
-            
-            document.addEventListener('mousemove', (e) => {
-                if (!isDragging) return;
-                
-                const left = Math.min(startX, e.clientX);
-                const top = Math.min(startY, e.clientY);
-                const width = Math.abs(e.clientX - startX);
-                const height = Math.abs(e.clientY - startY);
-                
-                selectionBox.style.left = left + 'px';
-                selectionBox.style.top = top + 'px';
-                selectionBox.style.width = width + 'px';
-                selectionBox.style.height = height + 'px';
-            });
-            
-            document.addEventListener('mouseup', () => {
-                isDragging = false;
-            });
-            
-            // ESC to cancel
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') {
-                    overlay.remove();
-                    selectionBox.remove();
-                }
-            });
+      function startTest() {
+        // Create overlay
+        const overlay = document.createElement("div");
+        overlay.className = "screenshot-overlay";
+        document.body.appendChild(overlay);
+
+        // Create selection box
+        const selectionBox = document.createElement("div");
+        selectionBox.className = "selection-box";
+        selectionBox.style.display = "none";
+        document.body.appendChild(selectionBox);
+
+        let isDragging = false;
+        let startX, startY;
+
+        overlay.addEventListener("mousedown", (e) => {
+          isDragging = true;
+          startX = e.clientX;
+          startY = e.clientY;
+
+          selectionBox.style.display = "block";
+          selectionBox.style.left = startX + "px";
+          selectionBox.style.top = startY + "px";
+          selectionBox.style.width = "0px";
+          selectionBox.style.height = "0px";
+
+          // Add classes with slight delay to prevent blinking
+          requestAnimationFrame(() => {
+            overlay.classList.add("selecting");
+            selectionBox.classList.add("visible");
+          });
+        });
+
+        let animationFrameId = null;
+        let endX = startX,
+          endY = startY;
+
+        function updateSelectionBox() {
+          const left = Math.min(startX, endX);
+          const top = Math.min(startY, endY);
+          const width = Math.abs(endX - startX);
+          const height = Math.abs(endY - startY);
+
+          selectionBox.style.left = left + "px";
+          selectionBox.style.top = top + "px";
+          selectionBox.style.width = width + "px";
+          selectionBox.style.height = height + "px";
+
+          animationFrameId = null;
         }
+
+        document.addEventListener("mousemove", (e) => {
+          if (!isDragging) return;
+
+          endX = e.clientX;
+          endY = e.clientY;
+
+          if (animationFrameId) {
+            cancelAnimationFrame(animationFrameId);
+          }
+
+          animationFrameId = requestAnimationFrame(updateSelectionBox);
+        });
+
+        document.addEventListener("mouseup", () => {
+          isDragging = false;
+          if (animationFrameId) {
+            cancelAnimationFrame(animationFrameId);
+            animationFrameId = null;
+          }
+        });
+
+        // ESC to cancel
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape") {
+            if (animationFrameId) {
+              cancelAnimationFrame(animationFrameId);
+              animationFrameId = null;
+            }
+            overlay.remove();
+            selectionBox.remove();
+          }
+        });
+      }
     </script>
-</body>
+  </body>
 </html>

@@ -9,6 +9,7 @@
   z-index: 999999;
   cursor: crosshair;
   user-select: none;
+  transition: background-color 0s ease;
 }
 
 .screenshot-overlay.selecting {
@@ -21,6 +22,14 @@
   background-color: transparent;
   pointer-events: none;
   box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5);
+  will-change: transform, width, height;
+  transform: translateZ(0);
+  opacity: 0;
+  transition: opacity 0s ease;
+}
+
+.selection-box.visible {
+  opacity: 1;
 }
 
 .selection-info {
@@ -29,11 +38,8 @@
   left: 50%;
   transform: translateX(-50%);
   background-color: rgba(0, 0, 0, 0.8);
-  color: white;
-  padding: 8px 16px;
-  border-radius: 4px;
-  font-family: Arial, sans-serif;
-  font-size: 14px;
+  color: gray;
+  font-size: 12px;
   z-index: 1000000;
   pointer-events: none;
 }
@@ -64,7 +70,9 @@
 }
 
 .control-btn.cancel {
-  background-color: #dc3545;
+  padding: 4px 8px;
+  background-color: #c82333;
+  font-size: 12px;
 }
 
 .control-btn.cancel:hover {

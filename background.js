@@ -73,22 +73,12 @@ async function handleAreaCapture(request, sender, sendResponse) {
         const imageDataUrl = reader.result;
 
         // Extract text from image using Gemini API
-        try {
-          const extractedText = await extractTextFromImage(imageDataUrl);
-          sendResponse({
-            success: true,
-            dataUrl: imageDataUrl,
-            extractedText: extractedText,
-          });
-        } catch (error) {
-          console.error("Error extracting text:", error);
-          sendResponse({
-            success: true,
-            dataUrl: imageDataUrl,
-            extractedText: null,
-            textExtractionError: error.message,
-          });
-        }
+        const extractedText = await extractTextFromImage(imageDataUrl);
+        sendResponse({
+          success: true,
+          dataUrl: imageDataUrl,
+          extractedText: extractedText,
+        });
       };
 
       reader.onerror = () => {
@@ -103,7 +93,6 @@ async function handleAreaCapture(request, sender, sendResponse) {
       sendResponse({ success: false, error: error.message });
     }
   } catch (error) {
-    console.error("Error in background script:", error);
     sendResponse({ success: false, error: error.message });
   }
 }
@@ -167,9 +156,7 @@ async function extractTextFromImage(imageDataUrl) {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(
-          `Gemini API error: ${errorData.error?.message || response.statusText}`
-        );
+        return null;
       }
 
       const data = await response.json();
@@ -177,23 +164,17 @@ async function extractTextFromImage(imageDataUrl) {
       if (data.candidates && data.candidates[0] && data.candidates[0].content) {
         return data.candidates[0].content.parts[0].text;
       } else {
-        throw new Error(
-          "No text found in the image or unexpected API response format"
-        );
+        return null;
       }
     } catch (error) {
       lastError = error;
-      console.error(
-        `Gemini API request failed (attempt ${attempt}/${MAX_RETRIES}):`,
-        error
-      );
 
       // Don't retry on certain errors
       if (error.name === "AbortError") {
-        throw new Error("Request timeout - please try again");
+        return null;
       }
       if (error.message.includes("API key")) {
-        throw error; // Don't retry API key errors
+        return null;
       }
 
       // Wait before retrying (exponential backoff)
@@ -205,7 +186,5 @@ async function extractTextFromImage(imageDataUrl) {
     }
   }
 
-  throw (
-    lastError || new Error("Failed to extract text after multiple attempts")
-  );
+  return null;
 }

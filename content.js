@@ -12,12 +12,14 @@ if (typeof window.AreaSelector === "undefined") {
       this.selectionBox = null;
       this.selectionInfo = null;
       this.selectionControls = null;
+      this.animationFrameId = null;
 
       // Bind methods to preserve 'this' context
       this.onMouseDown = this.onMouseDown.bind(this);
       this.onMouseMove = this.onMouseMove.bind(this);
       this.onMouseUp = this.onMouseUp.bind(this);
       this.onKeyDown = this.onKeyDown.bind(this);
+      this.updateSelectionBox = this.updateSelectionBox.bind(this);
     }
 
     startSelection() {
@@ -82,12 +84,18 @@ if (typeof window.AreaSelector === "undefined") {
       this.startY = e.clientY;
       this.endX = e.clientX;
       this.endY = e.clientY;
-      this.overlay.classList.add("selecting");
+
       this.selectionBox.style.display = "block";
       this.selectionBox.style.left = this.startX + "px";
       this.selectionBox.style.top = this.startY + "px";
       this.selectionBox.style.width = "0px";
       this.selectionBox.style.height = "0px";
+
+      // Add classes with slight delay to prevent blinking
+      requestAnimationFrame(() => {
+        this.overlay.classList.add("selecting");
+        this.selectionBox.classList.add("visible");
+      });
     }
 
     onMouseMove(e) {
@@ -102,6 +110,20 @@ if (typeof window.AreaSelector === "undefined") {
       this.endX = e.clientX;
       this.endY = e.clientY;
 
+      // Cancel previous animation frame if it exists
+      if (this.animationFrameId) {
+        cancelAnimationFrame(this.animationFrameId);
+      }
+
+      // Schedule update for next frame
+      this.animationFrameId = requestAnimationFrame(this.updateSelectionBox);
+    }
+
+    updateSelectionBox() {
+      if (!this.selectionBox || this.selectionBox.style.display === "none") {
+        return;
+      }
+
       const left = Math.min(this.startX, this.endX);
       const top = Math.min(this.startY, this.endY);
       const width = Math.abs(this.endX - this.startX);
@@ -112,7 +134,11 @@ if (typeof window.AreaSelector === "undefined") {
       this.selectionBox.style.width = width + "px";
       this.selectionBox.style.height = height + "px";
 
-      this.selectionInfo.textContent = `Selection: ${width} x ${height}px`;
+      if (this.selectionInfo) {
+        this.selectionInfo.textContent = `Selection: ${width} x ${height}px`;
+      }
+
+      this.animationFrameId = null;
     }
 
     onMouseUp(e) {
@@ -126,6 +152,12 @@ if (typeof window.AreaSelector === "undefined") {
       e.preventDefault();
       this.isDragging = false;
 
+      // Cancel any pending animation frame
+      if (this.animationFrameId) {
+        cancelAnimationFrame(this.animationFrameId);
+        this.animationFrameId = null;
+      }
+
       const width = Math.abs(this.endX - this.startX);
       const height = Math.abs(this.endY - this.startY);
 
@@ -135,6 +167,7 @@ if (typeof window.AreaSelector === "undefined") {
       } else {
         // If selection is too small, reset
         this.overlay.classList.remove("selecting");
+        this.selectionBox.classList.remove("visible");
         this.selectionBox.style.display = "none";
         this.selectionInfo.textContent = "Click and drag to select an area";
       }
@@ -177,7 +210,7 @@ if (typeof window.AreaSelector === "undefined") {
       this.showLoadingAnimation();
 
       // Wait a brief moment to ensure overlay is completely hidden before capture
-      await new Promise(resolve => setTimeout(resolve, 50));
+      await new Promise((resolve) => setTimeout(resolve, 50));
 
       try {
         // Send message to background script to capture screenshot
@@ -190,18 +223,11 @@ if (typeof window.AreaSelector === "undefined") {
         this.hideLoadingAnimation();
 
         if (response.success) {
-          // Display extracted text
+          // Display extracted text only if available
           if (response.extractedText) {
             this.showTextResult(response.extractedText);
-          } else if (response.textExtractionError) {
-            this.showTextResult(
-              `Error extracting text: ${response.textExtractionError}`
-            );
-          } else {
-            this.showTextResult(
-              "Text extraction completed but no text found in image."
-            );
           }
+          // Silently handle null/empty responses (API errors)
         } else {
           throw new Error(response.error || "Failed to capture screenshot");
         }
@@ -487,12 +513,19 @@ if (typeof window.AreaSelector === "undefined") {
       this.isDragging = false;
       this.removeEventListeners();
 
+      // Cancel any pending animation frame
+      if (this.animationFrameId) {
+        cancelAnimationFrame(this.animationFrameId);
+        this.animationFrameId = null;
+      }
+
       if (this.overlay) {
         this.overlay.remove();
         this.overlay = null;
       }
 
       if (this.selectionBox) {
+        this.selectionBox.classList.remove("visible");
         this.selectionBox.remove();
         this.selectionBox = null;
       }
